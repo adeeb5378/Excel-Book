@@ -1,0 +1,42 @@
+let downloadBtn = document.querySelector(".download");
+let openBtn = document.querySelector(".open");
+
+downloadBtn.addEventListener("click",(e)=>{
+    let jsonData = JSON.stringify([sheetDB,graphComponentMatrix]);
+    let file = new Blob([jsonData],{type:"application/json"});
+
+    let a = document.createElement("a");
+    a.href = URL.createObjectURL(file);
+    a.download = "sheetData.json";
+    a.click();
+});
+
+openBtn.addEventListener("click",(e)=>{
+    // Open file explorer
+    let input = document.createElement("input");
+    input.setAttribute("type","file");
+    input.click(); 
+
+    input.addEventListener("change",(e)=>{
+        let fr = new FileReader();
+        let files = input.files;
+        let fileObj = files[0];
+
+        fr.readAsText(fileObj);
+        fr.addEventListener("load",(e)=>{
+            let readSheetData = json.parse(fr.result);
+
+            // Basic sheet with default data will be created
+            addSheetBtn.click();
+
+            // sheetDB,graphComponent
+            sheetDB = readSheetData[0];
+            graphComponentMatrix = readSheetData[1];
+
+            collectedSheetDB[collectedSheetDB.length-1] = sheetDB;
+            collectedGraphComponent[collectedGraphComponent.length-1] = graphComponentMatrix;
+
+            handleSheetProperties();
+        })
+    })
+})
